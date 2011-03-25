@@ -1,5 +1,6 @@
 //
-// RouteMe.h
+//  RMFoundationTests.m
+//  MapView
 // 
 // Copyright (c) 2008-2011, Route-Me Contributors
 // All rights reserved.
@@ -25,19 +26,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-// The list of header files for more convenient Route-Me import to projects.
-// (in alphabetic order)
+#import "RMFoundationTests.h"
 
-// P.S. The list isn't full. Need to add missing header files, when required
+@implementation RMFoundationTests
 
-#import "RMAbstractMercatorWebSource.h"
-#import "RMCircle.h"
-#import "RMLayerCollection.h"
-#import "RMMapContents.h"
-#import "RMMapView.h"
-#import "RMMarkerManager.h"
-#import "RMPath.h"
-#import "RMProjection.h"
-#import "RMTileSource.h"
+- (void)testProjectedRectIntersectsProjectedRect {
+	RMProjectedRect r0022 = RMMakeProjectedRect(0.0, 0.0, 2.0, 2.0);
+	RMProjectedRect r0123 = RMMakeProjectedRect(0.0, 1.0, 2.0, 2.0);
+	RMProjectedRect r0325 = RMMakeProjectedRect(0.0, 3.0, 2.0, 2.0);
+	RMProjectedRect r1032 = RMMakeProjectedRect(1.0, 0.0, 2.0, 2.0);
+	
+	STAssertTrue(RMProjectedRectInterectsProjectedRect(r0123, r1032), nil);
+	STAssertTrue(RMProjectedRectInterectsProjectedRect(r1032, r0123), nil);
+	STAssertFalse(RMProjectedRectInterectsProjectedRect(r0022, r0325), nil);
+	STAssertFalse(RMProjectedRectInterectsProjectedRect(r0325, r0022), nil);
+	STAssertTrue(RMProjectedRectInterectsProjectedRect(r0022, r0123), nil);
+	STAssertTrue(RMProjectedRectInterectsProjectedRect(r0123, r0022), nil);
+}
 
-#import "NSUserDefaults+RouteMe.h"
+@end

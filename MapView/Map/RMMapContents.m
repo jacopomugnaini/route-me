@@ -872,6 +872,20 @@ static NSMutableDictionary *cachedTilesources = nil;
 	[self moveToLatLong:center];
 }
 
+- (RMProjectedPoint)centerProjectedPoint
+{
+	return [mercatorToScreenProjection projectedCenter];
+}
+
+- (void)setCenterProjectedPoint:(RMProjectedPoint)projectedPoint
+{
+	[mercatorToScreenProjection setProjectedCenter:projectedPoint];
+	[overlay correctPositionOfAllSublayers];
+	[tileLoader reload];
+	[renderer setNeedsDisplay];
+	[overlay setNeedsDisplay];
+}
+
 -(RMProjectedRect) projectedBounds
 {
 	return [mercatorToScreenProjection projectedBounds];

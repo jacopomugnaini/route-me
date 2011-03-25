@@ -66,6 +66,7 @@ enum {
 @protocol RMMapContentsAnimationCallback <NSObject>
 @optional
 - (void)animationFinishedWithZoomFactor:(float)zoomFactor near:(CGPoint)p;
+- (void)animationStepped;
 @end
 
 
@@ -122,6 +123,7 @@ enum {
 }
 
 @property (readwrite) CLLocationCoordinate2D mapCenter;
+@property (readwrite) RMProjectedPoint centerProjectedPoint;
 @property (readwrite) RMProjectedRect projectedBounds;
 @property (readonly)  RMTileRect tileBounds;
 @property (readonly)  CGRect screenBounds;
@@ -187,6 +189,7 @@ enum {
 - (BOOL) tileSourceBoundsContainProjectedPoint:(RMProjectedPoint) point;
 
 - (void)moveToLatLong: (CLLocationCoordinate2D)latlong;
+/// \deprecate Use setCenterProjectedPoint: instead.
 - (void)moveToProjectedPoint: (RMProjectedPoint)aPoint;
 
 - (void)moveBy: (CGSize) delta;

@@ -1,5 +1,5 @@
 //
-// RouteMe.h
+//  RMFoundationTests.h
 // 
 // Copyright (c) 2008-2011, Route-Me Contributors
 // All rights reserved.
@@ -25,19 +25,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-// The list of header files for more convenient Route-Me import to projects.
-// (in alphabetic order)
 
-// P.S. The list isn't full. Need to add missing header files, when required
+#import <SenTestingKit/SenTestingKit.h>
+#import <UIKit/UIKit.h>
 
-#import "RMAbstractMercatorWebSource.h"
-#import "RMCircle.h"
-#import "RMLayerCollection.h"
-#import "RMMapContents.h"
-#import "RMMapView.h"
-#import "RMMarkerManager.h"
-#import "RMPath.h"
-#import "RMProjection.h"
-#import "RMTileSource.h"
 
-#import "NSUserDefaults+RouteMe.h"
+@interface RMFoundationTests : SenTestCase {
+    
+}
+
+@end

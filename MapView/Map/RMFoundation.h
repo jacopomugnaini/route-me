@@ -28,6 +28,8 @@
 #ifndef _FOUNDATION_H_
 #define _FOUNDATION_H_
 
+#import <stdbool.h>
+
 /*! \struct RMProjectedPoint 
  \brief coordinates, in projected meters, paralleling CGPoint */
 typedef struct {
@@ -46,6 +48,11 @@ typedef struct {
 	RMProjectedPoint origin;
 	RMProjectedSize size;
 } RMProjectedRect;
+
+/// \brief The function checks whether two passed projected points are equal.
+bool RMProjectedPointEqualToProjectedPoint(RMProjectedPoint point1, RMProjectedPoint point2);
+/// \brief The function returs true, if passed rects intersect each other.
+bool RMProjectedRectInterectsProjectedRect(RMProjectedRect rect1, RMProjectedRect rect2);
 
 RMProjectedPoint RMScaleProjectedPointAboutPoint (RMProjectedPoint point, float factor, RMProjectedPoint pivot);
 RMProjectedRect  RMScaleProjectedRectAboutPoint(RMProjectedRect rect,   float factor, RMProjectedPoint pivot);

@@ -172,6 +172,8 @@
     
 	_delegateHasBeforeMapZoomByFactor = [(NSObject*) delegate respondsToSelector: @selector(beforeMapZoom: byFactor: near:)];
 	_delegateHasAfterMapZoomByFactor  = [(NSObject*) delegate respondsToSelector: @selector(afterMapZoom: byFactor: near:)];
+	
+	_delegateHasMapViewRegionDidChange = [delegate respondsToSelector:@selector(mapViewRegionDidChange:)];
 
 	_delegateHasBeforeMapRotate  = [(NSObject*) delegate respondsToSelector: @selector(beforeMapRotate: fromAngle:)];
 	_delegateHasAfterMapRotate  = [(NSObject*) delegate respondsToSelector: @selector(afterMapRotate: toAngle:)];
@@ -204,6 +206,7 @@
 	if (_delegateHasBeforeMapMove) [delegate beforeMapMove: self];
 	[contents moveToProjectedPoint:aPoint];
 	if (_delegateHasAfterMapMove) [delegate afterMapMove: self];
+	if (_delegateHasMapViewRegionDidChange) [delegate mapViewRegionDidChange:self];
 }
 
 -(void) moveToLatLong: (CLLocationCoordinate2D) point
@@ -211,6 +214,7 @@
 	if (_delegateHasBeforeMapMove) [delegate beforeMapMove: self];
 	[contents moveToLatLong:point];
 	if (_delegateHasAfterMapMove) [delegate afterMapMove: self];
+	if (_delegateHasMapViewRegionDidChange) [delegate mapViewRegionDidChange:self];
 }
 
 -(void)setConstraintsSW:(CLLocationCoordinate2D)sw NE:(CLLocationCoordinate2D)ne
@@ -269,6 +273,7 @@
 	if (_delegateHasBeforeMapMove) [delegate beforeMapMove: self];
 	[contents moveBy:delta];
 	if (_delegateHasAfterMapMove) [delegate afterMapMove: self];
+	if (_delegateHasMapViewRegionDidChange) [delegate mapViewRegionDidChange:self];
 }
  
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) center
@@ -350,9 +355,12 @@
 	}
 	
 	if (_delegateHasBeforeMapZoomByFactor) [delegate beforeMapZoom: self byFactor: zoomFactor near: center];
-	[contents zoomByFactor:zoomFactor near:center animated:animated withCallback:(animated && _delegateHasAfterMapZoomByFactor)?self:nil];
+	[self.contents zoomByFactor:zoomFactor near:center animated:animated withCallback:(animated && (_delegateHasAfterMapZoomByFactor || _delegateHasMapViewRegionDidChange))?self:nil];
 	if (!animated)
+	{
 		if (_delegateHasAfterMapZoomByFactor) [delegate afterMapZoom: self byFactor: zoomFactor near: center];
+		if (_delegateHasMapViewRegionDidChange) [delegate mapViewRegionDidChange:self];
+	}
 }
 
 - (void)zoomWithLatLngBoundsNorthEast:(CLLocationCoordinate2D)ne SouthWest:(CLLocationCoordinate2D)sw
@@ -369,6 +377,9 @@
 		[delegate afterMapZoom: self byFactor: zoomFactor near: p];
 }
 
+- (void)animationStepped {
+	if (_delegateHasMapViewRegionDidChange) [delegate mapViewRegionDidChange:self];
+}
 
 #pragma mark Event handling
 

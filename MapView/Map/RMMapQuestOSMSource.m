@@ -1,7 +1,7 @@
 //
-//  RMMapLayer.m
+//  RMMapQuestOSMSource.m
 //
-// Copyright (c) 2008-2009, Route-Me Contributors
+// Copyright (c) 2008-2011, Route-Me Contributors
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,49 +25,48 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import "RMMapLayer.h"
-#import "RMPixel.h"
+#import "RMMapQuestOSMSource.h"
 
-@implementation RMMapLayer
+@implementation RMMapQuestOSMSource
 
-- (id) init
-{
-	if (![super init])
-		return nil;
-	
+-(id) init
+{       
+	if(self = [super init]) 
+	{
+		[self setMaxZoom:18];
+		[self setMinZoom:1];
+	}
 	return self;
+} 
+
+-(NSString*) tileURL: (RMTile) tile
+{
+	NSAssert4(((tile.zoom >= self.minZoom) && (tile.zoom <= self.maxZoom)),
+			  @"%@ tried to retrieve tile with zoomLevel %d, outside source's defined range %f to %f", 
+			  self, tile.zoom, self.minZoom, self.maxZoom);
+	return [NSString stringWithFormat:@"http://otile1.mqcdn.com/tiles/1.0.0/osm/%d/%d/%d.png", tile.zoom, tile.x, tile.y];
 }
 
-- (id)initWithLayer:(id)layer
+-(NSString*) uniqueTilecacheKey
 {
-	if (![super initWithLayer:layer])
-		return nil;
-	
-	return self;
+	return @"MapQuestOSM";
 }
 
-/// \bug why return nil for the "position" and "bounds" actionForKey? Does this do anything besides block Core Animation?
-- (id<CAAction>)actionForKey:(NSString *)key
+-(NSString *)shortName
 {
-	if ([key isEqualToString:@"position"]
-		|| [key isEqualToString:@"bounds"])
-		return nil;
-	
-	else return [super actionForKey:key];
+	return @"MapQuest";
 }
-
-- (void)moveBy: (CGSize) delta
+-(NSString *)longDescription
 {
-	self.position = RMTranslateCGPointBy(self.position, delta);
+	return @"Map tiles courtesy of MapQuest.";
 }
-
-- (void)zoomByFactor: (float) zoomFactor near:(CGPoint) pivot
+-(NSString *)shortAttribution
 {
-    // a empty layer has size=(0,0) which cause divide by 0 if scaled
-    if(self.bounds.size.width == 0.0 || self.bounds.size.height == 0.0)
-        return;
-	self.position = RMScaleCGPointAboutPoint(self.position, zoomFactor, pivot);
-	self.bounds = RMScaleCGRectAboutPoint(self.bounds, zoomFactor, self.anchorPoint);
+	return @"Tiles courtesy of MapQuest.";
+}
+-(NSString *)longAttribution
+{
+	return @"Tiles courtesy of MapQuest and OpenStreetMap contributors.";
 }
 
 @end
